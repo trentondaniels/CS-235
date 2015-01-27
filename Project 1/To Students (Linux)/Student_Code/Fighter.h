@@ -13,7 +13,7 @@
 class Fighter: public FighterInterface {
 public:
 	Fighter();
-	Fighter(string info);
+	Fighter(string validatedInfo);
 	virtual ~Fighter();
 
 	string getName();
@@ -22,14 +22,14 @@ public:
 	int getStrength();
 	int getSpeed();
 	int getMagic();
-	int getDamage();
 	void takeDamage(int damage);
-	virtual void reset();
 	virtual void regenerate();
-	virtual bool useAbility();
+	virtual void reset();
+	virtual int getDamage() = 0;
+	virtual bool useAbility() = 0;
 protected:
 	string name;
-	int maxinumHP, currentHP, strength, speed, magic, damage;
+	int maximumHP, currentHP, strength, speed, magic;
 };
 
 #endif /* FIGHTER_H_ */

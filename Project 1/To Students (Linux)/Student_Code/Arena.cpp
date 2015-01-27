@@ -15,11 +15,36 @@ Arena::Arena() {
 
 bool Arena::addFighter(string info) {
 	if (stringMakesValidFighter(info)) {
-		fighters.push_back(new Fighter(info));
+		switch (getFighterTypeFromString(info)) {
+		case 'R':
+			fighters.push_back(new Robot(info));
+			break;
+		case 'C':
+			fighters.push_back(new Cleric(info));
+			break;
+		case 'A':
+			fighters.push_back(new Archer(info));
+			break;
+		default:
+			return false;
+			break;
+		}
 		return true;
 	} else {
 		return false;
 	}
+}
+
+char Arena::getFighterTypeFromString(string info) {
+	string name;
+	char type;
+
+	stringstream ss;
+	ss << info;
+
+	ss >> name;
+	ss >> type;
+	return type;
 }
 
 bool Arena::stringMakesValidFighter(string info) {
@@ -32,7 +57,7 @@ bool Arena::stringMakesValidFighter(string info) {
 	ss << info;
 
 	ss >> name;
-	if(getFighter(name) != NULL){ //If fighter is already in vector
+	if (getFighter(name) != NULL) { //If fighter is already in vector
 		cout >> "Fighter already exists" << endl;
 		return false;
 	}

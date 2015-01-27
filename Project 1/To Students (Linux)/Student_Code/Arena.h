@@ -9,7 +9,9 @@
 #define ARENA_H_
 
 #include "ArenaInterface.h"
-#include "Fighter.h"
+#include "Archer.h"
+#include "Cleric.h"
+#include "Robot.h"
 #include <vector>
 
 class Arena: public ArenaInterface {
@@ -18,6 +20,8 @@ public:
 	virtual ~Arena();
 
 	bool addFighter(string info);
+
+	char getFighterTypeFromString(string info);
 
 	bool stringMakesValidFighter(string info);
 

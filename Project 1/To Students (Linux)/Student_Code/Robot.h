@@ -13,12 +13,17 @@
 class Robot: public Fighter {
 public:
 	Robot();
-	Robot(string info);
+	Robot(string validatedInfo);
 	virtual ~Robot();
 
+	int getDamage();
+	void takeDamage(int damage);
 	void reset();
 	void regenerate();
 	bool useAbility();
+private:
+	int bonusDamage = 0, energy, maximumEnergy;
+	int calculateBonusDamage(bool &abilityWasUsed);
 };
 
 #endif /* ROBOT_H_ */

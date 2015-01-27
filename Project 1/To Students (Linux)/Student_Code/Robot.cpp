@@ -12,19 +12,45 @@ Robot::Robot() {
 
 }
 
-Robot:: Robot(string info){
-
+Robot::Robot(string validatedInfo) {
+	maximumEnergy = magic*2;
+	energy = maximumEnergy;
 }
 
-void Robot::reset(){
-
+int Robot::getDamage() {
+	int totalDamage = strength + bonusDamage;
+	bonusDamage = 0;
+	return totalDamage;
 }
 
-void Robot::regenerate(){
-
+void Robot::reset() {
+	Fighter::reset();
+	energy = maximumEnergy;
+	bonusDamage = 0;
 }
 
-bool Robot::useAbility(){
+void Robot::regenerate() {
+	Fighter::regenerate();
+}
+
+bool Robot::useAbility() {
+	bool abilityWasUsed;
+	bonusDamage = calculateBonusDamage(abilityWasUsed);
+	return abilityWasUsed;
+}
+
+int Robot::calculateBonusDamage(bool &abilityWasUsed){
+
+	double bonusDamage;
+	if(energy >= ROBOT_ABILITY_COST){
+		bonusDamage= (strength  * ((energy/maximumEnergy)^4));
+		energy -= ROBOT_ABILITY_COST;
+		abilityWasUsed=true;
+	}else{
+		bonusDamage = 0;
+		abilityWasUsed=false;
+	}
+	return (int)bonusDamage;
 
 }
 

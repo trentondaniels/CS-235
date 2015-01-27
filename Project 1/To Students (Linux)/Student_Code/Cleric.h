@@ -13,12 +13,15 @@
 class Cleric: public Fighter {
 public:
 	Cleric();
-	Cleric(string info);
+	Cleric(string validatedInfo);
 	virtual ~Cleric();
 
+	int getDamage();
 	void reset();
 	void regenerate();
 	bool useAbility();
+private:
+	int mana, maximumMana;
 };
 
 #endif /* CLERIC_H_ */

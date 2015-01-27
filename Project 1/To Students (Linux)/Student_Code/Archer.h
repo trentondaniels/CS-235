@@ -13,12 +13,15 @@
 class Archer: public Fighter {
 public:
 	Archer();
-	Archer(string info);
+	Archer(string validatedInfo);
 	virtual ~Archer();
 
+	int getDamage();
 	void reset();
 	void regenerate();
 	bool useAbility();
+private:
+	int initialSpeed;
 };
 
 #endif /* ARCHER_H_ */
