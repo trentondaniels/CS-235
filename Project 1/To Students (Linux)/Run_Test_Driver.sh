@@ -1,7 +1,7 @@
 #!/bin/bash
 EXE=dont_run_me
 
-g++ -o$EXE Student_Code/*.cpp ignoreme.a
+g++ -std=c++11 -o$EXE Student_Code/*.cpp ignoreme.a
 if (( $? )) ;
 then 
 	echo Compilation Failed;

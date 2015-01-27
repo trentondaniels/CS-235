@@ -9,6 +9,7 @@
 #define FIGHTER_H_
 
 #include "FighterInterface.h"
+#include <cmath>
 
 class Fighter: public FighterInterface {
 public:

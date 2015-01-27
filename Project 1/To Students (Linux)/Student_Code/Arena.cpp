@@ -6,7 +6,6 @@
  */
 
 #include "Arena.h"
-#include<sstream>
 
 Arena::Arena() {
 	// TODO Auto-generated constructor stub
@@ -18,19 +17,24 @@ bool Arena::addFighter(string info) {
 		switch (getFighterTypeFromString(info)) {
 		case 'R':
 			fighters.push_back(new Robot(info));
+			cout << "New Robot Added" << endl;
 			break;
 		case 'C':
 			fighters.push_back(new Cleric(info));
+			cout << "New Cleric Added" << endl;
 			break;
 		case 'A':
 			fighters.push_back(new Archer(info));
+			cout << "New Archer Added" << endl;
 			break;
 		default:
+			cout << "Invalid Type Indicator" << endl;
 			return false;
 			break;
 		}
 		return true;
 	} else {
+		cout << "String did not make valid fighter" << endl;
 		return false;
 	}
 }
@@ -52,58 +56,66 @@ bool Arena::stringMakesValidFighter(string info) {
 	string name;
 	char type;
 	int maxHP, strength, speed, magic;
+	int extraInfo = -1;
 
 	stringstream ss;
 	ss << info;
 
 	ss >> name;
 	if (getFighter(name) != NULL) { //If fighter is already in vector
-		cout >> "Fighter already exists" << endl;
+		cout << "Fighter already exists" << endl;
 		return false;
 	}
 	ss >> type;
 	if (type != 'R' && type != 'C' && type != 'A') {
-		cout >> "Invalid Type Indicator" << endl;
+		cout << "Invalid Type Indicator" << endl;
 		return false;
 	}
 	ss >> maxHP >> strength >> speed >> magic;
 	if (maxHP <= 0 || strength <= 0 || speed <= 0 || magic <= 0) {
-		cout >> "Invalid attribute value" << endl;
+		cout << "Invalid attribute value" << endl;
 		return false;
+	}
+	try {
+		ss >> extraInfo;
+	} catch (exception e) {
+		cout << "could not load extraInfo" << endl;
 	}
 
-	if (ss.fail()) {
-		cout >> "Invalid information format" << endl;
+
+	if(extraInfo >= 0){
+		cout << "Too much info" << endl;
 		return false;
-	} else {
-		return true;
 	}
+	return true;
 }
 
 bool Arena::removeFighter(string name) {
-	for (int i = 0; i < fighters.size(); i++) {
-		if (fighters.at(i)->getName() == name) {
-			fighters.erase(fighters.begin() + i);
-			return true;
-		}
+for (int i = 0; i < fighters.size(); i++) {
+	if (fighters.at(i)->getName() == name) {
+		fighters.erase(fighters.begin() + i);
+		return true;
 	}
-	return false;
+}
+return false;
 }
 
 FighterInterface* Arena::getFighter(string name) {
-	for (int i = 0; i < fighters.size(); i++) {
-		if (fighters.at(i)->getName() == name) {
-			return fighters.at(i);
-		}
+for (int i = 0; i < fighters.size(); i++) {
+	if (fighters.at(i)->getName() == name) {
+		cout << "Fighter " << name << " found at index:" << i << endl;
+		return fighters.at(i);
 	}
-	return NULL;
+}
+cout << "Fighter " << name << " not found in arena" << endl;
+return NULL;
 }
 
 int Arena::getSize() {
-	return fighters.size();
+return fighters.size();
 }
 
 Arena::~Arena() {
-	// TODO Auto-generated destructor stub
+// TODO Auto-generated destructor stub
 }
 

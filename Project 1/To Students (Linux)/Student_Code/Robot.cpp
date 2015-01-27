@@ -12,13 +12,15 @@ Robot::Robot() {
 
 }
 
-Robot::Robot(string validatedInfo) {
-	maximumEnergy = magic*2;
+Robot::Robot(string validatedInfo) :
+		Fighter(validatedInfo) {
+	maximumEnergy = magic * 2;
 	energy = maximumEnergy;
 }
 
 int Robot::getDamage() {
 	int totalDamage = strength + bonusDamage;
+	cout << "Strength: " << strength << " BonusDamage: " << bonusDamage << endl;
 	bonusDamage = 0;
 	return totalDamage;
 }
@@ -39,18 +41,25 @@ bool Robot::useAbility() {
 	return abilityWasUsed;
 }
 
-int Robot::calculateBonusDamage(bool &abilityWasUsed){
+int Robot::calculateBonusDamage(bool &abilityWasUsed) {
 
-	double bonusDamage;
-	if(energy >= ROBOT_ABILITY_COST){
-		bonusDamage= (strength  * ((energy/maximumEnergy)^4));
+	double bonusDamage = 0;
+	if (energy >= ROBOT_ABILITY_COST) {
+		cout << "Calculating bonus damage...strength: " << strength
+				<< " energy: " << energy << " maxEnergy: " << maximumEnergy
+				<< endl;
+		bonusDamage = (strength * (pow(((double)energy / (double)maximumEnergy), 4)));
+		cout << "energy/maximumEnergy = " << (energy / maximumEnergy) <<
+		" which raised to the fourth is " << (pow((energy / maximumEnergy),4)) << " times strength of " << strength << " is "
+						<< bonusDamage << endl;
+		cout << "bonus damage calculated at " << bonusDamage << endl;
 		energy -= ROBOT_ABILITY_COST;
-		abilityWasUsed=true;
-	}else{
-		bonusDamage = 0;
-		abilityWasUsed=false;
+		abilityWasUsed = true;
+	} else {
+		abilityWasUsed = false;
 	}
-	return (int)bonusDamage;
+	cout << " returning: " << (int) bonusDamage << endl;
+	return (int) bonusDamage;
 
 }
 

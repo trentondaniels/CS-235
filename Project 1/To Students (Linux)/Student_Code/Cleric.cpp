@@ -7,12 +7,15 @@
 
 #include "Cleric.h"
 
+
 Cleric::Cleric() {
 	// TODO Auto-generated constructor stub
+	cout << "Cleric cannot be created without information" << endl;
 
 }
 
-Cleric::Cleric(string validatedInfo){
+Cleric::Cleric(string validatedInfo):Fighter(validatedInfo){
+	cout << "Calling Cleric(string info)" << endl;
 	maximumMana = magic*5;
 	mana = maximumMana;
 }

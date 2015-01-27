@@ -10,6 +10,7 @@
 
 #include "Fighter.h"
 
+
 class Robot: public Fighter {
 public:
 	Robot();
@@ -17,7 +18,6 @@ public:
 	virtual ~Robot();
 
 	int getDamage();
-	void takeDamage(int damage);
 	void reset();
 	void regenerate();
 	bool useAbility();

@@ -13,6 +13,10 @@
 #include "Cleric.h"
 #include "Robot.h"
 #include <vector>
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
 
 class Arena: public ArenaInterface {
 public:

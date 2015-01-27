@@ -7,13 +7,18 @@
 
 #include "Fighter.h"
 #include <sstream>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
 
 Fighter::Fighter() {
 	// TODO Auto-generated constructor stub
-	cout << "Fighter cannot be created without information" << endl;
+	cout << "Default Fighter Constructor" << endl;
 }
 
 Fighter::Fighter(string validatedInfo) {
+	cout << "Calling Fighter(string info)" << endl;
 	char typeIndicator;
 	stringstream ss;
 	ss << validatedInfo;
@@ -53,12 +58,12 @@ void Fighter::takeDamage(int damage) {
 
 }
 
-virtual void Fighter::reset() {
+void Fighter::reset() {
 	currentHP = maximumHP;
 }
 
-virtual void Fighter::regenerate(){
-	if(strength/6 > 1){
+void Fighter::regenerate(){
+	if(strength/6 < 1){
 		currentHP += 1;
 	}else{
 		currentHP += strength/6;

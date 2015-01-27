@@ -10,6 +10,7 @@
 
 #include "Fighter.h"
 
+
 class Archer: public Fighter {
 public:
 	Archer();

@@ -7,12 +7,13 @@
 
 #include "Archer.h"
 
+
 Archer::Archer() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Archer::Archer(string validatedInfo){
+Archer::Archer(string validatedInfo):Fighter(validatedInfo){
 	initialSpeed = speed;
 }
 
