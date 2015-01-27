@@ -18,7 +18,6 @@ Fighter::Fighter() {
 }
 
 Fighter::Fighter(string validatedInfo) {
-	cout << "Calling Fighter(string info)" << endl;
 	char typeIndicator;
 	stringstream ss;
 	ss << validatedInfo;

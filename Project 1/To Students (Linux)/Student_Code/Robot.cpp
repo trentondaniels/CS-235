@@ -20,7 +20,6 @@ Robot::Robot(string validatedInfo) :
 
 int Robot::getDamage() {
 	int totalDamage = strength + bonusDamage;
-	cout << "Strength: " << strength << " BonusDamage: " << bonusDamage << endl;
 	bonusDamage = 0;
 	return totalDamage;
 }
@@ -45,20 +44,12 @@ int Robot::calculateBonusDamage(bool &abilityWasUsed) {
 
 	double bonusDamage = 0;
 	if (energy >= ROBOT_ABILITY_COST) {
-		cout << "Calculating bonus damage...strength: " << strength
-				<< " energy: " << energy << " maxEnergy: " << maximumEnergy
-				<< endl;
 		bonusDamage = (strength * (pow(((double)energy / (double)maximumEnergy), 4)));
-		cout << "energy/maximumEnergy = " << (energy / maximumEnergy) <<
-		" which raised to the fourth is " << (pow((energy / maximumEnergy),4)) << " times strength of " << strength << " is "
-						<< bonusDamage << endl;
-		cout << "bonus damage calculated at " << bonusDamage << endl;
 		energy -= ROBOT_ABILITY_COST;
 		abilityWasUsed = true;
 	} else {
 		abilityWasUsed = false;
 	}
-	cout << " returning: " << (int) bonusDamage << endl;
 	return (int) bonusDamage;
 
 }

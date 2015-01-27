@@ -17,15 +17,12 @@ bool Arena::addFighter(string info) {
 		switch (getFighterTypeFromString(info)) {
 		case 'R':
 			fighters.push_back(new Robot(info));
-			cout << "New Robot Added" << endl;
 			break;
 		case 'C':
 			fighters.push_back(new Cleric(info));
-			cout << "New Cleric Added" << endl;
 			break;
 		case 'A':
 			fighters.push_back(new Archer(info));
-			cout << "New Archer Added" << endl;
 			break;
 		default:
 			cout << "Invalid Type Indicator" << endl;
@@ -79,7 +76,6 @@ bool Arena::stringMakesValidFighter(string info) {
 	try {
 		ss >> extraInfo;
 	} catch (exception e) {
-		cout << "could not load extraInfo" << endl;
 	}
 
 
@@ -103,11 +99,9 @@ return false;
 FighterInterface* Arena::getFighter(string name) {
 for (int i = 0; i < fighters.size(); i++) {
 	if (fighters.at(i)->getName() == name) {
-		cout << "Fighter " << name << " found at index:" << i << endl;
 		return fighters.at(i);
 	}
 }
-cout << "Fighter " << name << " not found in arena" << endl;
 return NULL;
 }
 
