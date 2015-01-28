@@ -1,4 +1,6 @@
 #include "Factory.h"
+#include "LinkedList.h"
+#include "LinkedList.cpp"
 
 //You may add #include statements here
 
@@ -16,7 +18,8 @@
 */
 LinkedListInterface<int> * Factory::getLinkedListInt()
 {
-	return NULL;//Modify this line
+	LinkedListInterface<int>* list = new LinkedList<int>();
+	return list;
 }
 
 /*
@@ -29,5 +32,6 @@ LinkedListInterface<int> * Factory::getLinkedListInt()
 */
 LinkedListInterface<string>* Factory::getLinkedListString()
 {
-	return NULL;//Modify this line
+	LinkedListInterface<string>* list = new LinkedList<string>();
+		return list;
 }
