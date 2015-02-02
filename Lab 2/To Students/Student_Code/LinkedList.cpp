@@ -32,101 +32,180 @@ int LinkedList<T>::size() {
 }
 
 template<class T>
-void LinkedList<T>::insertHead(T value) {
-	head = new node();
-	head->value = value;
-	head->next = NULL;
-	head->previous = NULL;
+bool LinkedList<T>::valueIsInList(T value) {
+	if (this->size() > 0) {
+		if (head->value == value) {
+			return true;
+		}
+		current = head;
+		while (current->next != NULL) {
+			current = current->next;
+			if (current->value == value) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
-	temporary = head;
-	current = head;
+template<class T>
+void LinkedList<T>::insertHead(T value) {
+	if (!this->valueIsInList(value)) {
+		if (this->size() > 0) {
+
+			current = head;
+			head = new node();
+
+			head->next = current;
+			head->previous = NULL;
+			current->previous = head;
+
+			head->value = value;
+		} else {
+			head = new node();
+			head->value = value;
+			head->next = NULL;
+			head->previous = NULL;
+
+			temporary = head;
+			current = head;
+		}
+	}
 
 }
 
 template<class T>
 void LinkedList<T>::insertTail(T value) {
-	current = head;
-	while (current->next != NULL) {
+	if (!this->valueIsInList(value)) {
+		if (this->size() == 0) {
+			this->insertHead(value);
+			return;
+		}
+		current = head;
 		temporary = current;
-		current = current->next;
+		while (current->next != NULL) {
+			current = current->next;
+			temporary = current;
+		}
+		current = new node();
+		current->value = value;
+		current->next = NULL;
+		current->previous = temporary;
+		temporary->next = current;
 	}
-	current = new node();
-	current->value = value;
-	current->next = NULL;
-	current->previous = temporary;
-	temporary->next = current;
-
 }
 
 template<class T>
 void LinkedList<T>::insertAfter(T value, T insertionNode) {
-	if (this->size() > 0) {
-		current = head;
-		do {
-			if (current->value == insertionNode) {
-				temporary = current;
-				temporary2 = current->next;
-
+	if (!this->valueIsInList(value)) {
+		if (this->size() > 0) {
+			if (head->value == insertionNode) {
+				current = head;
+				temporary = head->next;
 				current = new node();
 				current->value = value;
-				current->next = temporary2;
-				current->previous = temporary;
-				temporary->next = current;
-			} else {
-				current = current->next;
+				current->next = temporary;
+				current->previous = head;
+				head->next = current;
 			}
-		} while (current->next != NULL);
+			current = head;
+			do {
+				if (current->next != NULL) {
+					current = current->next;
+				}
+				if (current->value == insertionNode) {
+					temporary = current;
+					temporary2 = current->next;
+
+					current = new node();
+					current->value = value;
+					current->next = temporary2;
+					current->previous = temporary;
+					temporary->next = current;
+				}
+			} while (current->next != NULL);
+		}
 	}
 }
 
 template<class T>
 void LinkedList<T>::remove(T value) {
 	if (this->size() > 0) {
+		if (head->value == value) {
+			temporary = head->next;
+			delete head;
+			head = temporary;
+			return;
+		}
 		current = head;
-		do {
+		while (current->next != NULL) {
+			current = current->next;
 			if (current->value == value) {
 				temporary = current->previous;
 				temporary2 = current->next;
 
 				delete current;
 
-				temporary->next = temporary2;
-				temporary2->previous = temporary;
-			} else {
-				current = current->next;
+				if (temporary != NULL) {
+					temporary->next = temporary2;
+				}
+				if (temporary2 != NULL) {
+					temporary2->previous = temporary;
+				}
+				return;
 			}
-		} while (current->next != NULL);
+		}
 	}
 }
 
 template<class T>
-void LinkedList<T>::clear(){
-	if(this->size() > 0){
-		current = head;
-		do{
-			temporary = current;
-			current = current->next;
+void LinkedList<T>::clear() {
+	if (this->size() > 0) {
+		if (this->size() == 1) {
+			delete head;
+			head = NULL;
+			current = NULL;
+			temporary = NULL;
+			temporary2 = NULL;
+			return;
+		} else {
+			current = head;
+			while (current->next != NULL) {
+				temporary = current;
+				current = current->next;
 
-			delete temporary;
-		}while(current->next != NULL);
+				delete temporary;
+
+			}
+			delete current;
+
+		}
+
+	}else{
 	}
+	head = NULL;
+	current = NULL;
+	temporary = NULL;
+	temporary2 = NULL;
 }
 
 template<class T>
-T LinkedList<T>::at(int index){
-	if(this->size() >= index){
+T LinkedList<T>::at(int index) {
+	if (index >= 0 && index < this->size()) {
 		current = head;
-		for(int i = 0; i < index; i++){
+		for (int i = 0; i < index; i++) {
 			current = current->next;
 		}
-		T value = current ->value;
+		T value = current->value;
 		return value;
+	} else {
+		throw out_of_range("index out of bounds");
 	}
-}
 
+}
 
 template<class T>
 LinkedList<T>::~LinkedList() {
-	// TODO Auto-generated destructor stub
+	this->clear();
 }
 

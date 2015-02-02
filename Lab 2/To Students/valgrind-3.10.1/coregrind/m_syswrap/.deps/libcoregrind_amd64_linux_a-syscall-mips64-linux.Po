@@ -1,0 +1,4 @@
+m_syswrap/libcoregrind_amd64_linux_a-syscall-mips64-linux.o: \
+ m_syswrap/syscall-mips64-linux.S /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

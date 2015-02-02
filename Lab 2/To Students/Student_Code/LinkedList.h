@@ -9,6 +9,8 @@
 #define TO_STUDENTS_STUDENT_CODE_LINKEDLIST_H_
 
 #include "LinkedListInterface.h"
+#include <stdexcept>
+#include <iostream>
 using namespace std;
 
 
@@ -25,13 +27,17 @@ public:
 	void clear();
 	T at(int index);
 	int size();
+
+	bool valueIsInList(T value);
 private:
+
 	struct node{
 	public:
 		T value;
 		node* next;
 		node* previous;
 	};
+
 
 	node* head;
 	node* temporary;
