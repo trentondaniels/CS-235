@@ -43,7 +43,7 @@ void Dequeue::pop_back() {
 	}
 }
 bool Dequeue::empty() {
-	return empty();
+	return (cars.size() == 0);
 }
 int Dequeue::front() {
 	if (!empty()) {

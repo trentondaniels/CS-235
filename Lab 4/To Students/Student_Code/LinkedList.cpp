@@ -5,7 +5,7 @@
  *      Author: Jason
  */
 
-#include "LinkedList.h"
+/*#include "LinkedList.h"
 using namespace std;
 
 template<class T>
@@ -181,7 +181,7 @@ void LinkedList<T>::clear() {
 
 		}
 
-	}else{
+	} else {
 	}
 	head = NULL;
 	current = NULL;
@@ -208,4 +208,4 @@ template<class T>
 LinkedList<T>::~LinkedList() {
 	this->clear();
 }
-
+*/
