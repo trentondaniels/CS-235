@@ -9,13 +9,15 @@
 #define STATION_H_
 
 #include "StationInterface.h"
+#include "StationInterfaceExtra.h"
 #include "Stack.h"
 #include "Queue.h"
-#include "Dequeue.h"
+#include "IRDeque.h"
+#include "ORDeque.h"
 
 namespace std {
 
-class Station: public StationInterface {
+class Station: public StationInterfaceExtra {
 public:
 	Station();
 	virtual ~Station();
@@ -43,10 +45,27 @@ public:
 	int showTopOfDequeRight();
 	int showSizeOfDeque();
 
+	bool addToIRDequeLeft();
+	bool removeFromIRDequeLeft();
+	bool removeFromIRDequeRight();
+	int showTopOfIRDequeLeft();
+	int showTopOfIRDequeRight();
+	int showSizeOfIRDeque();
+
+	 bool addToORDequeLeft();
+	 bool addToORDequeRight();
+	 bool removeFromORDequeLeft();
+	 int showTopOfORDequeLeft();
+	 int showSizeOfORDeque();
+
+
+
 private:
 	Stack stack;
 	Queue queue;
-	Dequeue dequeue;
+	Dequeue deque;
+	IRDeque iRDeque;
+	ORDeque oRDeque;
 	int currentCar = -1;
 };
 

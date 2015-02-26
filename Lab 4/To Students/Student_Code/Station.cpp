@@ -19,9 +19,10 @@ Station::~Station() {
 
 bool Station::carExists(int car) {
 	//cout << "station.carExists() called" << endl;
-	if(stack.valueExists(car) || queue.valueExists(car) || dequeue.valueExists(car)){
+	if (stack.valueExists(car) || queue.valueExists(car)
+			|| deque.valueExists(car) || iRDeque.valueExists(car) || oRDeque.valueExists(car)) {
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }
@@ -116,57 +117,129 @@ int Station::showSizeOfQueue() {
 	return queue.size();
 }
 
-bool Station::addToDequeLeft(){
+bool Station::addToDequeLeft() {
 	//cout << "station.addToDequeLeft() called" << endl;
 	if (currentCar != -1) {
-			dequeue.push_front(currentCar);
-			currentCar = -1;
-			return true;
-		} else {
-			return false;
-		}
+		deque.push_front(currentCar);
+		currentCar = -1;
+		return true;
+	} else {
+		return false;
+	}
 }
-bool Station::addToDequeRight(){
+bool Station::addToDequeRight() {
 	//cout << "station.addToDequeRight() called" << endl;
 	if (currentCar != -1) {
-			dequeue.push_back(currentCar);
+		deque.push_back(currentCar);
+		currentCar = -1;
+		return true;
+	} else {
+		return false;
+	}
+}
+bool Station::removeFromDequeLeft() {
+	//cout << "station.removeFromDequeLeft() called" << endl;
+	if (currentCar == -1 && !deque.empty()) {
+		currentCar = deque.front();
+		deque.pop_front();
+		return true;
+	} else {
+		return false;
+	}
+}
+bool Station::removeFromDequeRight() {
+	//cout << "station.removeFromDequeRight() called" << endl;
+	if (currentCar == -1 && !deque.empty()) {
+		currentCar = deque.back();
+		deque.pop_back();
+		return true;
+	} else {
+		return false;
+	}
+}
+int Station::showTopOfDequeLeft() {
+	//cout << "station.showTopOfDequeLeft() called" << endl;
+	return deque.front();
+}
+int Station::showTopOfDequeRight() {
+	//cout << "station.showTopOfDequeRight() called" << endl;
+	return deque.back();
+}
+int Station::showSizeOfDeque() {
+	//cout << "station.showSizeOfDeque() called" << endl;
+	return deque.size();
+}
+
+bool Station::addToIRDequeLeft() {
+	if(!iRDeque.full() && currentCar != -1){
+		iRDeque.push_front(currentCar);
+		currentCar = -1;
+		return true;
+	}else{
+		return false;
+	}
+
+}
+bool Station::removeFromIRDequeLeft() {
+	if(currentCar == -1 && !iRDeque.empty()){
+		currentCar = iRDeque.front();
+		iRDeque.pop_front();
+		return true;
+	}else{
+		return false;
+	}
+}
+bool Station::removeFromIRDequeRight() {
+	if(currentCar == -1 && !iRDeque.empty()){
+			currentCar = iRDeque.back();
+			iRDeque.pop_back();
+			return true;
+		}else{
+			return false;
+		}
+}
+int Station::showTopOfIRDequeLeft() {
+	return iRDeque.front();
+}
+int Station::showTopOfIRDequeRight() {
+	return iRDeque.back();
+}
+int Station::showSizeOfIRDeque() {
+	return iRDeque.size();
+}
+
+bool Station::addToORDequeLeft() {
+	if(!oRDeque.full() && currentCar != -1){
+			oRDeque.push_front(currentCar);
 			currentCar = -1;
 			return true;
-		} else {
+		}else{
 			return false;
 		}
 }
-bool Station::removeFromDequeLeft(){
-	//cout << "station.removeFromDequeLeft() called" << endl;
-	if (currentCar == -1 && !dequeue.empty()) {
-			currentCar = dequeue.front();
-			dequeue.pop_front();
+bool Station::addToORDequeRight() {
+	if(!oRDeque.full() && currentCar != -1){
+				oRDeque.push_back(currentCar);
+				currentCar = -1;
+				return true;
+			}else{
+				return false;
+			}
+}
+bool Station::removeFromORDequeLeft() {
+	if(currentCar == -1 && !oRDeque.empty()){
+			currentCar = oRDeque.front();
+			oRDeque.pop_front();
 			return true;
-		} else {
+		}else{
 			return false;
 		}
 }
-bool Station::removeFromDequeRight(){
-	//cout << "station.removeFromDequeRight() called" << endl;
-	if (currentCar == -1 && !dequeue.empty()) {
-			currentCar = dequeue.back();
-			dequeue.pop_back();
-			return true;
-		} else {
-			return false;
-		}
+int Station::showTopOfORDequeLeft() {
+	return oRDeque.front();
 }
-int Station::showTopOfDequeLeft(){
-	//cout << "station.showTopOfDequeLeft() called" << endl;
-	return dequeue.front();
-}
-int Station::showTopOfDequeRight(){
-	//cout << "station.showTopOfDequeRight() called" << endl;
-	return dequeue.back();
-}
-int Station::showSizeOfDeque(){
-	//cout << "station.showSizeOfDeque() called" << endl;
-	return dequeue.size();
+int Station::showSizeOfORDeque() {
+	return oRDeque.size();
 }
 
 } /* namespace std */
