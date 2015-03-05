@@ -9,6 +9,7 @@
 #define STUDENT_CODE_CIRCULARDLL_H_
 
 #include "CircularDLLInterface.h"
+#include<iostream>
 
 namespace std {
 
@@ -31,22 +32,21 @@ public:
 	bool valueIsInList(string name);
 
 private:
-	struct node{
-		public:
-			string name;
-			node* next;
-			node* previous;
-		};
-
-
-		node* head;
-		node* temporary;
-		node* temporary2;
-		node* current;
-		node* tail;
+	int sizeOfList;
+	struct node {
+	public:
+		string name;
+		node* next;
+		node* previous;
 	};
+
+	node* head;
+	node* temporary;
+	node* current;
+	node* tail;
 };
 
-} /* namespace std */
+}
+;
 
 #endif /* STUDENT_CODE_CIRCULARDLL_H_ */

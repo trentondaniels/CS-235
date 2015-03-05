@@ -13,12 +13,12 @@ CircularDLL::CircularDLL() {
 	head = NULL;
 	current = NULL;
 	temporary = NULL;
-	temporary2 = NULL;
 	tail = NULL;
+	sizeOfList = 0;
 }
 
 CircularDLL::~CircularDLL() {
-	// TODO Auto-generated destructor stub
+	clear();
 }
 
 bool CircularDLL::valueIsInList(string name) {
@@ -38,78 +38,87 @@ bool CircularDLL::valueIsInList(string name) {
 }
 
 bool CircularDLL::insertHead(string name) {
+	cout << "Insert head called" << endl;
 	if (!this->valueIsInList(name)) {
 		if (this->size() > 0) {
+			cout << "Size > 0...";
 
-			current = head;
-			head = new node();
-
-			head->next = current;
-			head->previous = tail;
-			tail->next = head;
-			current->previous = head;
-
-			head->name = name;
+			current = new node();
+			sizeOfList++;
+			current->next = head;
+			current->previous = tail;
+			current->next->previous = current;
+			current->previous->next = current;
+			current->name = name;
+			head = current;
 		} else {
+			cout << "Current size 0...";
+
 			head = new node();
+			sizeOfList++;
 			head->name = name;
 			head->next = head;
 			head->previous = head;
-			tail->next = head;
-			tail->previous = head;
+			tail = head;
 
-			temporary = head;
-			current = head;
 		}
+		cout << "Head added name:" << head->name << endl;
 		return true;
 	} else {
+		cout << "Name already in list" << endl;
 		return false;
 	}
 
 }
 bool CircularDLL::insertTail(string name) {
+	cout << "Insert tail called...";
 	if (!this->valueIsInList(name)) {
 		if (this->size() == 0) {
-			this->insertHead(name);
+			cout << "Current size 0...";
+			head = new node();
+			sizeOfList++;
+			head->name = name;
+			head->next = head;
+			head->previous = head;
+			tail = head;
+			cout << "Tail added name:" << tail->name << endl;
 			return true;
 		}
-		current = head;
-		temporary = current;
-		while (current->next != head) {
-			current = current->next;
-			temporary = current;
-		}
+		cout << "Size > 0...";
 		current = new node();
-		current->name = name;
+		sizeOfList++;
+		current->previous = tail;
 		current->next = head;
-		current->previous = temporary;
-		temporary->next = current;
-		head->previous = current;
+		current->previous->next = current;
+		current->next->previous = current;
+		current->name = name;
 		tail = current;
+		cout << "Tail added name:" << tail->name << endl;
 		return true;
 	} else {
+		cout << "Name already in list" << endl;
 		return false;
 	}
 }
 bool CircularDLL::insertAt(string name, int index) {
 	if (!this->valueIsInList(name)) {
-		if (this->size() > index && index >= 0) {
+		if (index >= 0) {
 			current = head;
 			for (int i = 0; i < index; i++) {
 				current = current->next;
 			}
-			temporary = current;
-			temporary2 = current->next;
-			current = new node();
-			current->previous = temporary;
-			current->next = temporary2;
-			current->name = name;
+			temporary = new node();
+			sizeOfList++;
 			temporary->next = current;
-			temporary2->previous = current;
-
+			temporary->previous = current->previous;
+			temporary->previous->next = temporary;
+			temporary->next->previous = temporary;
+			temporary->name = name;
+			cout << name << " added at " << index << endl;
 			return true;
 		}
 	} else {
+		cout << "Name already in list" << endl;
 		return false;
 	}
 }
@@ -117,20 +126,22 @@ bool CircularDLL::removeHead() {
 	if (this->size() > 0) {
 		if (this->size() == 1) {
 			delete head;
+			sizeOfList--;
 			head = NULL;
 			current = NULL;
 			temporary = NULL;
-			temporary2 = NULL;
 			tail = NULL;
 			return true;
 		} else {
 			temporary = head->next;
+			head->previous->next = temporary;
+			head->next->previous = head->previous;
 			delete head;
+			sizeOfList--;
 			head = temporary;
-			tail->next = head;
-			head->previous = tail;
 			return true;
 		}
+	} else {
 		return false;
 	}
 }
@@ -138,81 +149,100 @@ bool CircularDLL::removeTail() {
 	if (this->size() > 0) {
 		if (this->size() == 1) {
 			delete tail;
+			sizeOfList--;
 			head = NULL;
 			current = NULL;
 			temporary = NULL;
-			temporary2 = NULL;
 			tail = NULL;
 			return true;
 		} else {
 			temporary = tail->previous;
+			tail->previous->next = tail->next;
+			tail->next->previous = tail->previous;
 			delete tail;
+			sizeOfList--;
 			tail = temporary;
-			tail->next = head;
-			head->previous = tail;
 			return true;
 		}
 		return false;
+	} else {
+		return false;
 	}
 }
-}
+
 bool CircularDLL::removeAt(int index) {
-	if (this->size() > index && index >= 0) {
+	if (index >= 0) {
 		current = head;
 		for (int i = 0; i < index; i++) {
 			current = current->next;
 		}
-		temporary = current->next;
-		temporary2 = current->previous;
+		if (current == head && current != NULL) {
+			current->previous->next = current->next;
+			current->next->previous = current->previous;
+			head = current->next;
+			delete current;
+			sizeOfList--;
+			return true;
+		}
+		if (current == tail && current != NULL) {
+			current->previous->next = current->next;
+			current->next->previous = current->previous;
+			tail = current->previous;
+			delete current;
+			sizeOfList--;
+			return true;
+		}
+		current->previous->next = current->next;
+		current->next->previous = current->previous;
 		delete current;
-		temporary->previous = temporary2;
-		temporary2->next = temporary;
+		sizeOfList--;
+		return true;
+	} else {
+		return false;
 	}
 }
 void CircularDLL::clear() {
-	if (this->size() > 0) {
-		if (this->size() == 1) {
+	cout << "Clear called. Size: " << sizeOfList << "...";
+	if (sizeOfList > 0) {
+		if (sizeOfList == 1) {
+			cout << "deleting for size=1";
 			delete head;
+			sizeOfList--;
 			head = NULL;
 			current = NULL;
 			temporary = NULL;
-			temporary2 = NULL;
 			tail = NULL;
 			return;
 		} else {
+			cout << "deleting for size>1 = " << sizeOfList;
 			current = head;
-			while (current->next != tail) {
+			int count = sizeOfList;
+			for (int i = 0; i < count; i++) {
 				temporary = current;
-				current = current->next;
-
+				if (current->next != NULL) {
+					current = current->next;
+				}
+				cout << temporary->name << " deleted";
 				delete temporary;
-
+				sizeOfList--;
 			}
-			delete current;
-			delete tail;
 
 		}
 
+	}else{
+		cout << "Size already 0";
 	}
 	head = NULL;
 	current = NULL;
 	temporary = NULL;
-	temporary2 = NULL;
+	tail = NULL;
+	cout << "All pointers set to NULL" << endl;
 }
 int CircularDLL::size() {
-	int size = 0;
-	if (head != NULL) {
-		size = 1;
-		node* sizeChecker = head;
-		while (sizeChecker->next != NULL) {
-			sizeChecker = sizeChecker->next;
-			size += 1;
-		}
-	}
-	return size;
+	return sizeOfList;
 }
 string CircularDLL::atFromHead(int index) {
-	if (this->size() > index && index >= 0) {
+	if (index >= 0) {
 		current = head;
 		for (int i = 0; i < index; i++) {
 			current = current->next;
@@ -223,7 +253,7 @@ string CircularDLL::atFromHead(int index) {
 	}
 }
 string CircularDLL::atFromTail(int index) {
-	if (this->size() > index && index >= 0) {
+	if (index >= 0) {
 		current = tail;
 		for (int i = 0; i < index; i++) {
 			current = current->previous;
@@ -232,5 +262,6 @@ string CircularDLL::atFromTail(int index) {
 	} else {
 		return "invalid";
 	}
+}
 
 } /* namespace std */

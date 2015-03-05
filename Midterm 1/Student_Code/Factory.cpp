@@ -1,4 +1,6 @@
 #include "Factory.h"
+#include "CircularDLL.h"
+
 
 //You may add #include statements here
 
@@ -16,6 +18,7 @@
 	you might say, "return new CircularDoubleLinkedList();".
 */
 CircularDLLInterface* Factory::getStudentList() {
-	return NULL;
+	CircularDLLInterface* list = new CircularDLL;
+	return list;
 }
 //=======================================================================================
