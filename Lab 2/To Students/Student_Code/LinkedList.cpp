@@ -181,7 +181,6 @@ void LinkedList<T>::clear() {
 
 		}
 
-	}else{
 	}
 	head = NULL;
 	current = NULL;
