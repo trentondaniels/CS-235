@@ -17,7 +17,7 @@ QS::QS() {
 }
 
 QS::~QS() {
-	// TODO Auto-generated destructor stub
+	clear();
 }
 
 void QS::swapValues(int *first, int *second) {
@@ -87,7 +87,7 @@ int QS::partition(int left, int right, int pivotIndex) {
 	//cout << "array size: " << timesAdded << ": "<< getArray();
 
 	if (left > right || !(left < pivotIndex && pivotIndex < right)
-			|| data == NULL || left < 0 || right > timesAdded
+			|| data == NULL || left < 0 || right >= timesAdded
 			|| right - left < 2) {
 		//cout << "invalid input" << endl;
 		return -1;
@@ -95,7 +95,7 @@ int QS::partition(int left, int right, int pivotIndex) {
 
 	swapValues(data + left, data + pivotIndex);
 
-	int *up = (data + left + 1), *down = (data + right - 1);
+	int *up = (data + left + 1), *down = (data + right);
 
 	do {
 		while (*up <= *(data + left) && up != (data + right)) {
@@ -166,15 +166,7 @@ void QS::clear() {
 		return;
 	}
 
-	int *last = data + (timesAdded - 1);
-	int *temp = data;
-	cout << "Deleting Array size: " << dataSize << ": " << getArray();
-	do {
-		cout << "Deleting index: " << temp - data << " ";
-		delete temp;
-		temp++;
 
-	} while (temp <= last);
 	delete[] data;
 	data = NULL;
 	timesAdded = 0;
