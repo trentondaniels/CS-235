@@ -15,6 +15,7 @@ Node::Node() {
 	leftChild = NULL;
 	data = 0;
 	height = 0;
+	balance = 0;
 
 }
 
@@ -24,26 +25,47 @@ Node::Node(Node* parent, int data_in) {
 	rightChild = NULL;
 	leftChild = NULL;
 	height = 0;
+	balance = 0;
 }
 
 Node::~Node() {
 	// TODO Auto-generated destructor stub
 }
 
-int Node::calculateHeight(){
-	int rightHeight = 0, leftHeight = 0;
+void Node::calculateBalance() {
+	int leftHeight = 0, rightHeight = 0;
 	if(leftChild != NULL){
-		leftHeight = 1 - abs(leftChild->getHeight());
+		leftHeight = leftChild->getHeight();
 	}
-	if(this->rightChild != NULL){
-		rightHeight = 1 + abs(rightChild->getHeight());
+	if(rightChild != NULL){
+		rightHeight = rightChild->getHeight();
 	}
-
-	return rightHeight - leftHeight;
+	balance = rightHeight - leftHeight;
 }
 
-int Node::getHeight(){
-	height = calculateHeight();
+void Node::calculateHeight() {
+	int leftHeight = 0, rightHeight = 0;
+	if (leftChild != NULL) {
+		leftHeight = leftChild->getHeight();
+	}
+	if (this->rightChild != NULL) {
+		rightHeight = rightChild->getHeight();
+	}
+
+	if (rightHeight >= leftHeight) {
+		height = rightHeight + 1;
+	} else {
+		height = leftHeight + 1;
+	}
+}
+
+int Node::getBalance() {
+	calculateBalance();
+	return balance;
+}
+
+int Node::getHeight() {
+	calculateHeight();
 	return height;
 }
 
@@ -61,10 +83,6 @@ Node* Node::getRightChild() {
 
 Node* Node::getParent() {
 	return parent;
-}
-
-int Node::getHeight() {
-	return height;
 }
 
 void Node::setData(int data_in) {

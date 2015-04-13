@@ -29,6 +29,15 @@ bool AVL::insert(int data_in, Node* currentNode) {
 		if (currentNode->getLeftChild() == NULL) {
 			currentNode->setLeftChild(new Node(currentNode, data_in));
 			size++;
+
+			if (currentNode->getParent() != NULL) {
+				if (currentNode->getParent()->getParent() != NULL) {
+					if (!isBalanced(currentNode->getParent()->getParent())) {
+						balanceNode(currentNode->getParent()->getParent());
+					}
+				}
+			}
+
 			return true;
 		} else {
 			return insert(data_in, currentNode->getLeftChild());
@@ -37,6 +46,14 @@ bool AVL::insert(int data_in, Node* currentNode) {
 		if (currentNode->getRightChild() == NULL) {
 			currentNode->setRightChild(new Node(currentNode, data_in));
 			size++;
+
+			if (currentNode->getParent() != NULL) {
+				if (currentNode->getParent()->getParent() != NULL) {
+					if (!isBalanced(currentNode->getParent()->getParent())) {
+						balanceNode(currentNode->getParent()->getParent());
+					}
+				}
+			}
 			return true;
 		} else {
 			return insert(data_in, currentNode->getRightChild());
@@ -47,7 +64,108 @@ bool AVL::insert(int data_in, Node* currentNode) {
 }
 
 void AVL::balanceNode(Node* currentNode) {
+	if (currentNode->getBalance() <= -2) {
+		if (currentNode->getLeftChild()->getBalance() <= -1) {
+			balanceLeftLeft(currentNode);
+		} else {
+			balanceLeftRight(currentNode);
+		}
+	} else if (currentNode->getBalance >= 2) {
+		if (currentNode->getRightChild()->getBalance >= 1) {
+			balanceRightRight(currentNode);
+		} else {
+			balanceRightLeft(currentNode);
+		}
+	}
 
+	if (currentNode->getParent() != NULL) {
+		if (currentNode->getParent()->getParent() != NULL) {
+			if (!isBalanced(currentNode->getParent()->getParent())) {
+				balanceNode(currentNode->getParent()->getParent());
+			}
+		}
+	}
+}
+
+void AVL::balanceLeftLeft(Node* currentNode) {
+	Node* temp = currentNode->getLeftChild();
+
+	currentNode->setLeftChild(temp->getRightChild());
+	if (temp->getRightChild() != NULL) {
+		temp->getRightChild()->setParent(currentNode);
+	}
+
+	temp->setRightChild(currentNode);
+	temp->setParent(currentNode->getParent());
+	if (temp->getParent() != NULL) {
+		if (temp->getData() < temp->getParent()->getData()) {
+			temp->getParent()->setLeftChild(temp);
+		} else {
+			temp->getParent()->setRightChild(temp);
+		}
+	}
+	currentNode->setParent(temp);
+	if (currentNode == rootNode) {
+		rootNode = temp;
+	}
+}
+void AVL::balanceLeftRight(Node* currentNode) {
+	Node* temp = currentNode->getLeftChild()->getRightChild();
+	Node* rotateNode = currentNode->getLeftChild();
+
+	rotateNode->setRightChild(temp->getLeftChild());
+	if (temp->getLeftChild() != NULL) {
+		temp->getLeftChild()->setParent(rotateNode);
+	}
+
+	temp->setLeftChild(rotateNode);
+	temp->setParent(rotateNode->getParent());
+	if (temp->getParent() != NULL) {
+		temp->getParent()->setLeftChild(temp);
+	}
+	rotateNode->setParent(temp);
+
+	balanceLeftLeft(currentNode);
+}
+void AVL::balanceRightRight(Node* currentNode) {
+	Node* temp = currentNode->getRightChild();
+
+	currentNode->setRightChild(temp->getLeftChild());
+	if (temp->getLeftChild() != NULL) {
+		temp->getLeftChild()->setParent(currentNode);
+	}
+
+	temp->setLeftChild(currentNode);
+	temp->setParent(currentNode->getParent());
+	if (temp->getParent() != NULL) {
+		if (temp->getData() < temp->getParent()->getData()) {
+			temp->getParent()->setLeftChild(temp);
+		} else {
+			temp->getParent()->setRightChild(temp);
+		}
+	}
+	currentNode->setParent(temp);
+	if (currentNode == rootNode) {
+		rootNode = temp;
+	}
+}
+void AVL::balanceRightLeft(Node* currentNode) {
+	Node* temp = currentNode->getRightChild()->getLeftChild();
+	Node* rotateNode = currentNode->getRightChild();
+
+	rotateNode->setLeftChild(temp->getRightChild());
+	if(temp->getRightChild() != NULL){
+		temp->getRightChild()->setParent(rotateNode);
+	}
+
+	temp->setRightChild(rotateNode);
+	temp->setParent(rotateNode->getParent());
+	if(temp->getParent() != NULL){
+		temp->getParent()->setRightChild(temp);
+	}
+	rotateNode->setParent(temp);
+
+	balanceRightRight(currentNode);
 }
 
 bool AVL::add(int data) {
@@ -56,15 +174,7 @@ bool AVL::add(int data) {
 		size = 1;
 		return true;
 	} else {
-		if (insert(data, rootNode)) {
-			if (isBalanced(rootNode)) {
-				return true;
-			}
-			balanceNode(rootNode);
-			return true;
-		} else {
-			return false;
-		}
+		return (insert(data, rootNode));
 	}
 }
 
@@ -185,16 +295,7 @@ bool AVL::removeFromNode(int data_in, Node* currentNode) {
 }
 
 bool AVL::isBalanced(Node* currentNode) {
-	if (currentNode->getLeftChild() != NULL
-			&& currentNode->getRightChild() != NULL) {
-		return (isBalanced(currentNode->getLeftChild())
-				&& isBalanced(currentNode->getRightChild()));
-	} else if (currentNode->getLeftChild() == NULL
-			&& currentNode->getRightChild() == NULL) {
-		return true;
-	} else {
-		return false;
-	}
+	return (abs(currentNode->getBalance()) < 2);
 }
 
 void AVL::clearNode(Node* currentNode) {

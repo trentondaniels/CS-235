@@ -19,19 +19,21 @@ public:
 	virtual ~Node();
 	int getData();
 	int getHeight();
-	int calculateHeight();
+	int getBalance();
 
 	Node* getLeftChild();
 	Node* getRightChild();
 	Node* getParent();
 
+	void calculateHeight();
+	void calculateBalance();
 	void setLeftChild(Node* node_in);
 	void setRightChild(Node* node_in);
 	void setParent(Node* node_in);
 	void setData(int data_in);
 
 private:
-	int data, height;
+	int data, height, balance;
 	Node *parent, *leftChild, *rightChild;
 
 };

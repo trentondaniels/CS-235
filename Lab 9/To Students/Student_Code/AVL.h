@@ -30,6 +30,13 @@ public:
 	bool isBalanced(Node* currentNode);
 	void balanceNode(Node* currentNode);
 	void deleteChild(Node* currentNode);
+	void balanceLeftLeft(Node* currentNode);
+	void balanceLeftRight(Node* currentNode);
+	void balanceRightRight(Node* currentNode);
+	void balanceRightLeft(Node* currentNode);
+
+	void rotateRight(Node* currentNode);
+	void rotateLeft(Node* currentNode);
 
 private:
 	Node *rootNode;
