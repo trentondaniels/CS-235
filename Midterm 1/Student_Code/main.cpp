@@ -210,6 +210,10 @@ int calculateSafeIndex(CircularDLL roster, int count_in) {
 void dispatchBand(CircularDLL &roster, int count_in) {
 	int count = count_in;
 	bool acceptable = false;
+	if(roster.size()<1){
+		cout << "No names in roster" << endl;
+		return;
+	}
 	if (count >= 1 && count <= roster.size()) {
 		acceptable = true;
 	}
