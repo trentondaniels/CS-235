@@ -11,6 +11,7 @@
 #include "AVLInterface.h"
 #include "Node.h"
 #include <cmath>
+#include <iostream>
 
 namespace std {
 
@@ -30,10 +31,12 @@ public:
 	bool isBalanced(Node* currentNode);
 	void balanceNode(Node* currentNode);
 	void deleteChild(Node* currentNode);
+	void checkNewBalance(Node* currentNode);
 	void balanceLeftLeft(Node* currentNode);
 	void balanceLeftRight(Node* currentNode);
 	void balanceRightRight(Node* currentNode);
 	void balanceRightLeft(Node* currentNode);
+
 
 	void rotateRight(Node* currentNode);
 	void rotateLeft(Node* currentNode);

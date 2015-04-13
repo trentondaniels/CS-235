@@ -15,11 +15,29 @@ AVL::AVL() {
 }
 
 AVL::~AVL() {
-	// TODO Auto-generated destructor stub
+	clear();
 }
 
 NodeInterface *AVL::getRootNode() {
 	return rootNode;
+}
+
+void AVL::checkNewBalance(Node* currentNode) {
+	if (!isBalanced(currentNode)) {
+		//cout << "balancing " << currentNode->getData() << "...";
+		balanceNode(currentNode);
+	}
+	//cout << currentNode->getData() << " balanced...";
+
+	while (currentNode->getParent() != NULL) {
+		currentNode = currentNode->getParent();
+		//cout << "Checking balance on " << currentNode->getData() << "...";
+		if (!isBalanced(currentNode)) {
+			//cout << "balancing " << currentNode->getData() << "...";
+			balanceNode(currentNode);
+		}
+		//cout << currentNode->getData() << " balanced...";
+	}
 }
 
 bool AVL::insert(int data_in, Node* currentNode) {
@@ -30,13 +48,7 @@ bool AVL::insert(int data_in, Node* currentNode) {
 			currentNode->setLeftChild(new Node(currentNode, data_in));
 			size++;
 
-			if (currentNode->getParent() != NULL) {
-				if (currentNode->getParent()->getParent() != NULL) {
-					if (!isBalanced(currentNode->getParent()->getParent())) {
-						balanceNode(currentNode->getParent()->getParent());
-					}
-				}
-			}
+			checkNewBalance(currentNode);
 
 			return true;
 		} else {
@@ -47,13 +59,8 @@ bool AVL::insert(int data_in, Node* currentNode) {
 			currentNode->setRightChild(new Node(currentNode, data_in));
 			size++;
 
-			if (currentNode->getParent() != NULL) {
-				if (currentNode->getParent()->getParent() != NULL) {
-					if (!isBalanced(currentNode->getParent()->getParent())) {
-						balanceNode(currentNode->getParent()->getParent());
-					}
-				}
-			}
+			checkNewBalance(currentNode);
+
 			return true;
 		} else {
 			return insert(data_in, currentNode->getRightChild());
@@ -65,26 +72,20 @@ bool AVL::insert(int data_in, Node* currentNode) {
 
 void AVL::balanceNode(Node* currentNode) {
 	if (currentNode->getBalance() <= -2) {
-		if (currentNode->getLeftChild()->getBalance() <= -1) {
+		if (currentNode->getLeftChild()->getBalance() <= 0) {
 			balanceLeftLeft(currentNode);
 		} else {
 			balanceLeftRight(currentNode);
 		}
-	} else if (currentNode->getBalance >= 2) {
-		if (currentNode->getRightChild()->getBalance >= 1) {
+	} else if (currentNode->getBalance() >= 2) {
+		if (currentNode->getRightChild()->getBalance() >= 0) {
 			balanceRightRight(currentNode);
 		} else {
 			balanceRightLeft(currentNode);
 		}
 	}
 
-	if (currentNode->getParent() != NULL) {
-		if (currentNode->getParent()->getParent() != NULL) {
-			if (!isBalanced(currentNode->getParent()->getParent())) {
-				balanceNode(currentNode->getParent()->getParent());
-			}
-		}
-	}
+	checkNewBalance(currentNode);
 }
 
 void AVL::balanceLeftLeft(Node* currentNode) {
@@ -154,13 +155,13 @@ void AVL::balanceRightLeft(Node* currentNode) {
 	Node* rotateNode = currentNode->getRightChild();
 
 	rotateNode->setLeftChild(temp->getRightChild());
-	if(temp->getRightChild() != NULL){
+	if (temp->getRightChild() != NULL) {
 		temp->getRightChild()->setParent(rotateNode);
 	}
 
 	temp->setRightChild(rotateNode);
 	temp->setParent(rotateNode->getParent());
-	if(temp->getParent() != NULL){
+	if (temp->getParent() != NULL) {
 		temp->getParent()->setRightChild(temp);
 	}
 	rotateNode->setParent(temp);
@@ -185,7 +186,7 @@ void AVL::deleteChild(Node* currentNode) {
 		} else if (currentNode == currentNode->getParent()->getRightChild()) {
 			currentNode->getParent()->setRightChild(NULL);
 		} else {
-			//cout << "Error with parent/child pointer";
+			////cout << "Error with parent/child pointer";
 		}
 	}
 	delete currentNode;
@@ -196,28 +197,41 @@ void AVL::deleteChild(Node* currentNode) {
 }
 
 bool AVL::remove(int data) {
+	//cout << "remove(" << data << ") called...";
 	if (rootNode == NULL) {
+		//cout << "root NULL" << endl;
 		return false;
 	} else {
-		if (removeFromNode(data, rootNode)) {
-			if (isBalanced(rootNode)) {
-				return true;
-			}
-			balanceNode(rootNode);
+		if(removeFromNode(data, rootNode)){
+			//cout << data << " removed" << endl;
 			return true;
-		} else {
+		}else{
 			return false;
 		}
 	}
 }
 
 bool AVL::removeFromNode(int data_in, Node* currentNode) {
+	if(currentNode == NULL){
+		//cout << data_in << " not found" << endl;
+		return false;
+	}
+
 	if (data_in == currentNode->getData()) {
 		//cout << "Member:" << data_in << " found...";
 		if (currentNode->getLeftChild() == NULL
 				&& currentNode->getRightChild() == NULL) {
-			//cout << "Member:" << data_in << " has no children. Deleteing...";
-			deleteChild(currentNode);
+			////cout << "Member:" << data_in << " has no children. Deleteing...";
+			if (currentNode->getParent() != NULL) {
+				Node* balanceCheck = currentNode->getParent();
+				deleteChild(currentNode);
+				//cout << "deleted..." << "checking balance on member: "
+						//<< balanceCheck->getData() << "...";
+				checkNewBalance(balanceCheck);
+			} else {
+				deleteChild(currentNode);
+			}
+
 			return true;
 		} else if (currentNode->getLeftChild() == NULL
 				&& currentNode->getRightChild() != NULL) {
@@ -234,8 +248,14 @@ bool AVL::removeFromNode(int data_in, Node* currentNode) {
 			if (rootNode == currentNode) {
 				rootNode = currentNode->getRightChild();
 			}
+			Node* balanceCheck = currentNode->getRightChild();
 			delete currentNode;
 			size--;
+			//cout << "deleted..." << "checking balance on member: "
+					//<< balanceCheck->getData() << "...";
+
+			checkNewBalance(balanceCheck);
+
 			return true;
 		} else if (currentNode->getLeftChild() != NULL
 				&& currentNode->getRightChild() == NULL) {
@@ -252,8 +272,14 @@ bool AVL::removeFromNode(int data_in, Node* currentNode) {
 			if (rootNode == currentNode) {
 				rootNode = currentNode->getLeftChild();
 			}
+			Node* balanceCheck = currentNode->getLeftChild();
 			delete currentNode;
 			size--;
+
+			//cout << "deleted..." << "checking balance on member: "
+					//<< balanceCheck->getData() << "...";
+			checkNewBalance(balanceCheck);
+
 			return true;
 		} else {
 			Node* temp = currentNode->getLeftChild();
@@ -262,31 +288,43 @@ bool AVL::removeFromNode(int data_in, Node* currentNode) {
 				temp = temp->getRightChild();
 				depth += 1;
 			}
+			Node* balanceCheck;
 			currentNode->setData(temp->getData());
 			if (temp->getLeftChild() != NULL) {
 				temp->getLeftChild()->setParent(temp->getParent());
-				if (depth > 0) {
-					temp->getParent()->setRightChild(temp->getLeftChild());
-				} else {
-					temp->getParent()->setLeftChild(temp->getLeftChild());
+				if (temp->getParent() != NULL) {
+					if (depth > 0) {
+						temp->getParent()->setRightChild(temp->getLeftChild());
+					} else {
+						temp->getParent()->setLeftChild(temp->getLeftChild());
+					}
 				}
+				balanceCheck = temp->getLeftChild();
 
 			} else {
-				if (depth > 0) {
-					temp->getParent()->setRightChild(NULL);
-				} else {
-					temp->getParent()->setLeftChild(NULL);
+				if (temp->getParent() != NULL) {
+					if (depth > 0) {
+						temp->getParent()->setRightChild(NULL);
+					} else {
+						temp->getParent()->setLeftChild(NULL);
+					}
 				}
+				balanceCheck = temp->getParent();
 			}
 			delete temp;
 			size--;
+
+			//cout << "deleted..." << "checking balance on member: "
+					//<< balanceCheck->getData() << "...";
+			checkNewBalance(balanceCheck);
+
 			return true;
 		}
 	} else if (data_in < currentNode->getData()) {
-		//cout << " L ";
+		////cout << " L ";
 		return removeFromNode(data_in, currentNode->getLeftChild());
 	} else if (data_in > currentNode->getData()) {
-		//cout << " R ";
+		////cout << " R ";
 		return removeFromNode(data_in, currentNode->getRightChild());
 	} else {
 		//cout << "Unkonwn Error" << endl;
